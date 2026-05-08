@@ -834,23 +834,27 @@ document.querySelectorAll('.vc').forEach(el=>{
   });
 });
 
-// Camera permission
-document.getElementById('btn-cam').addEventListener('click',async()=>{
-  try{
-    // Request camera — this is what shows the browser permission popup
-    const stream=await navigator.mediaDevices.getUserMedia({
+// Camera request function
+async function requestCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
       video:{width:{ideal:1280},height:{ideal:720},facingMode:'user'},
       audio:false,
     });
-    video.srcObject=stream;
-    // go to step 2
+    video.srcObject = stream;
     document.getElementById('s1').classList.remove('active');
     document.getElementById('s2').classList.add('active');
-  } catch(err){
+  } catch(err) {
     console.error('Camera error:',err);
     document.getElementById('cam-err').classList.remove('hidden');
   }
-});
+}
+
+// Button click also triggers camera
+document.getElementById('btn-cam').addEventListener('click', requestCamera);
+
+// Auto-request camera when page loads (triggers browser popup automatically)
+setTimeout(requestCamera, 600);
 
 // Enter app
 document.getElementById('btn-enter').addEventListener('click',()=>{
